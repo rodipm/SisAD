@@ -30,7 +30,7 @@ inicia_matrizes(int id_proc)
     fim_linhas = inicio_linhas + n_iter;
 
     // printf("INICIA inicio_linhas=%d    fim_linhas=%d\n", inicio_linhas, fim_linhas);
-    fflush(stdout);
+    // fflush(stdout);
 
     for (i = inicio_linhas; i < fim_linhas; i++)
     {
@@ -58,7 +58,7 @@ mat_mult(int id_proc)
     fim_linhas = inicio_linhas + n_iter;
 
     // printf("MULT (processos) inicio_linhas=%d    fim_linhas=%d\n", inicio_linhas, fim_linhas);
-    fflush(stdout);
+    // // fflush(stdout);
 
     for (i = inicio_linhas; i < fim_linhas; i++)
     {
@@ -120,7 +120,7 @@ char **argv;
     }
 
     // printf("id_proc=%d     n_iter=%d\n", id_proc, n_iter);
-    fflush(stdout);
+    // fflush(stdout);
 
     inicia_matrizes(id_proc);
 
@@ -135,8 +135,6 @@ char **argv;
         waitpid(pid[i], &status, 0);
 
     TIMER_STOP;
-    printf("TEMPO INICIA (process) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
-    printf("a[0][0]=%f   a[15][20]=%f  b[15][20]=%f  b[%d][%d]=%f \n", ((matrizes *)matriz)->a[0][0], ((matrizes *)matriz)->a[15][20], size - 1, size - 1, ((matrizes *)matriz)->b[15][20], ((matrizes *)matriz)->b[size - 1][size - 1]);
 
     /****************/
     /** Multiplicação 
@@ -162,7 +160,7 @@ char **argv;
     }
 
     // printf("id_proc=%d     n_iter=%d\n", id_proc, n_iter);
-    fflush(stdout);
+    // fflush(stdout);
 
     mat_mult(id_proc);
 
@@ -177,7 +175,9 @@ char **argv;
         waitpid(pid[i], &status, 0);
 
     TIMER_STOP;
+    printf("TEMPO INICIA (process) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
     printf("TEMPO MULTIPLICA (process) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
+    printf("a[0][0]=%f   a[15][20]=%f  b[15][20]=%f  b[%d][%d]=%f \n", ((matrizes *)matriz)->a[0][0], ((matrizes *)matriz)->a[15][20], size - 1, size - 1, ((matrizes *)matriz)->b[15][20], ((matrizes *)matriz)->b[size - 1][size - 1]);
     printf("c[0][0]=%f  c[2][1]=%f c[%d][%d]=%f\n", ((matrizes *)matriz)->c[0][0], ((matrizes *)matriz)->c[2][1], size - 1, size - 1, ((matrizes *)matriz)->c[size - 1][size - 1]);
 
     // Desliga-se da área de memória compartilhada

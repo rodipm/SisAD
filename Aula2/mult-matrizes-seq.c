@@ -64,11 +64,12 @@ char **argv;
   TIMER_START;
   inicia_matrizes();
   TIMER_STOP;
-  printf("TEMPO INICIA (seq) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
   TIMER_CLEAR;
   TIMER_START;
   mat_mult();
   TIMER_STOP;
+  printf("TEMPO INICIA (seq) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
   printf("TEMPO MULTIPLICA (seq) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
+  printf("a[0][0]=%f   a[15][20]=%f  b[15][20]=%f  b[%d][%d]=%f \n", a[0][0], a[15][20], b[15][20], size - 1, size - 1, b[size - 1][size - 1]);
   printf("c[0][0]=%f  c[2][1]=%f c[%d][%d]=%f\n", c[0][0], c[2][1], size - 1, size - 1, c[size - 1][size - 1]);
 }
