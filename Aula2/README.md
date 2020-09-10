@@ -1,5 +1,3 @@
-gcc –o arq arq.c –O3 -lpthread
-
 # 1. Fazer download dos programas
 
 # 2. Compilar e executar inicia-matrizes-seq.c
@@ -35,5 +33,5 @@ Neste caso tem-se a paralelização por threads que, diferente dos processos, co
 A estratégia de paralelização é idêntica a dos casos anteriores, utilizando segmentação da matriz entre as threads.
 
 ```
-gcc -o mult-matrizes-pthreads mult-matrizes-pthreads.c -O3 -pthread
+gcc -o mult-matrizes-pthreads mult-matrizes-pthreads.c -O3 -lpthread
 ```
