@@ -29,7 +29,7 @@ inicia_matrizes(int id_proc)
     inicio_linhas = (id_proc + 1) * n_iter;
     fim_linhas = inicio_linhas + n_iter;
 
-    printf("INICIA inicio_linhas=%d    fim_linhas=%d\n", inicio_linhas, fim_linhas);
+    // printf("INICIA inicio_linhas=%d    fim_linhas=%d\n", inicio_linhas, fim_linhas);
     fflush(stdout);
 
     for (i = inicio_linhas; i < fim_linhas; i++)
@@ -57,13 +57,13 @@ mat_mult(int id_proc)
     inicio_linhas = (id_proc + 1) * n_iter;
     fim_linhas = inicio_linhas + n_iter;
 
-    printf("MULT (processos) inicio_linhas=%d    fim_linhas=%d\n", inicio_linhas, fim_linhas);
+    // printf("MULT (processos) inicio_linhas=%d    fim_linhas=%d\n", inicio_linhas, fim_linhas);
     fflush(stdout);
 
     for (i = inicio_linhas; i < fim_linhas; i++)
     {
-        for (j = 0; j < size; j++)
-            for (k = 0; k < size; k++)
+        for (k = 0; k < size; k++)
+            for (j = 0; j < size; j++)
                 ((matrizes *)matriz)->c[i][j] = ((matrizes *)matriz)->c[i][j] + ((matrizes *)matriz)->a[i][k] * ((matrizes *)matriz)->b[k][j];
     }
 }
@@ -119,7 +119,7 @@ char **argv;
         }
     }
 
-    printf("id_proc=%d     n_iter=%d\n", id_proc, n_iter);
+    // printf("id_proc=%d     n_iter=%d\n", id_proc, n_iter);
     fflush(stdout);
 
     inicia_matrizes(id_proc);
@@ -135,7 +135,7 @@ char **argv;
         waitpid(pid[i], &status, 0);
 
     TIMER_STOP;
-    printf("TEMPO INICIA [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
+    printf("TEMPO INICIA (process) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
     printf("a[0][0]=%f   a[15][20]=%f  b[15][20]=%f  b[%d][%d]=%f \n", ((matrizes *)matriz)->a[0][0], ((matrizes *)matriz)->a[15][20], size - 1, size - 1, ((matrizes *)matriz)->b[15][20], ((matrizes *)matriz)->b[size - 1][size - 1]);
 
     /****************/
@@ -161,7 +161,7 @@ char **argv;
         }
     }
 
-    printf("id_proc=%d     n_iter=%d\n", id_proc, n_iter);
+    // printf("id_proc=%d     n_iter=%d\n", id_proc, n_iter);
     fflush(stdout);
 
     mat_mult(id_proc);
@@ -177,8 +177,8 @@ char **argv;
         waitpid(pid[i], &status, 0);
 
     TIMER_STOP;
-    printf("TEMPO MULTIPLICA [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
-    printf("c[0][0]=%f  c[2][1]=%f c[%d][%d]=%f\n", c[0][0], c[2][1], size - 1, size - 1, c[size - 1][size - 1]);
+    printf("TEMPO MULTIPLICA (process) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
+    printf("c[0][0]=%f  c[2][1]=%f c[%d][%d]=%f\n", ((matrizes *)matriz)->c[0][0], ((matrizes *)matriz)->c[2][1], size - 1, size - 1, ((matrizes *)matriz)->c[size - 1][size - 1]);
 
     // Desliga-se da área de memória compartilhada
     shmdt(matriz);
