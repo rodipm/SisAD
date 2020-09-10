@@ -24,7 +24,7 @@ Trata-se do mesmo programa anterior, apenas aplicando tecnicas de memória compa
 
 # 4. Paralelizar mult-matrizes-seq.c utilizando processos.
 
-O programa mult-matrizes-seq.c apresenta uma algoritmo simples de multiplicação de matrizes de forma sequencial, sem nenhum tipo de paralelização. A idéia é utilizar processos para paralelizar o acesso as matrizes e permitir que a matrix c seja calculada de maneira segmentada, sendo cada processo responsável por um deles.
+O programa mult-matrizes-seq.c apresenta uma algoritmo simples de multiplicação de matrizes de forma sequencial, sem nenhum tipo de paralelização. A idéia é utilizar processos para paralelizar o acesso as matrizes e permitir que a matriz c seja calculada de maneira segmentada, sendo cada processo responsável por um deles.
 
 Utiliza-se o mesmo principio de segmentação utilizado no exemplo "inicia-matrizes-proc" designando-se uma faixa de linhas para cada processo, de acordo com o numero de processos criados e o tamanho da matrix a ser calculada. Desta maneira, cada processo atua em um conjunto de linhas diferentes do outros.
 
