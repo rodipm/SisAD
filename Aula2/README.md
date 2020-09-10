@@ -19,7 +19,7 @@ Pode ser compilado com:
 Trata-se do mesmo programa anterior, apenas aplicando tecnicas de memória compartilhada, segmentando as linhas da matriz e as separando entre os processos gerados. Sendo assim cada processo atua paralelamente e independentemente com os diferentes segmentos da matriz (definidos pelo id de cada processo)
 
 ```
-> gcc -O3 inicia-matrizes-proc.c -o inicia-matrizes-proc
+> gcc -o inicia-matrizes-proc inicia-matrizes-proc.c -O3
 ```
 
 # 4. Paralelizar mult-matrizes-seq.c utilizando processos.
@@ -30,6 +30,10 @@ Utiliza-se o mesmo principio de segmentação utilizado no exemplo "inicia-matri
 
 # 5. Paralelizar mult-matrizes-seq.c utilizando pthreads.
 
+Neste caso tem-se a paralelização por threads que, diferente dos processos, compartilham memória naturalmente, além de apresentar tempos menores de criação e destruição em comparação aos processos.
+
+A estratégia de paralelização é idêntica a dos casos anteriores, utilizando segmentação da matriz entre as threads.
+
 ```
-gcc -o mult-matrizes-pthreads mult-matrizes-pthreads.c -O3 -pthreads
+gcc -o mult-matrizes-pthreads mult-matrizes-pthreads.c -O3 -pthread
 ```

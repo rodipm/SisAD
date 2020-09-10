@@ -98,8 +98,6 @@ char **argv;
     }
 
     TIMER_STOP;
-    printf("TEMPO INICIA (pthreads) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
-    printf("a[0][0]=%f   a[15][20]=%f  b[15][20]=%f  b[%d][%d]=%f \n", a[0][0], a[15][20], b[15][20], size - 1, size - 1, b[size - 1][size - 1]);
 
     /****************/
     /** Multiplicação 
@@ -129,6 +127,8 @@ char **argv;
     }
 
     TIMER_STOP;
+    printf("TEMPO INICIA (pthreads) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
     printf("TEMPO MULTIPLICA (pthreads) [SIZE %d]: %12.7f\n", size, TIMER_ELAPSED);
+    printf("a[0][0]=%f   a[15][20]=%f  b[15][20]=%f  b[%d][%d]=%f \n", a[0][0], a[15][20], b[15][20], size - 1, size - 1, b[size - 1][size - 1]);
     printf("c[0][0]=%f  c[2][1]=%f c[%d][%d]=%f\n", c[0][0], c[2][1], size - 1, size - 1, c[size - 1][size - 1]);
 }
