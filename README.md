@@ -1,0 +1,1 @@
+gcc -fopenmp arquivo.c
