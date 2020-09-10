@@ -29,3 +29,7 @@ O programa mult-matrizes-seq.c apresenta uma algoritmo simples de multiplicaçã
 Utiliza-se o mesmo principio de segmentação utilizado no exemplo "inicia-matrizes-proc" designando-se uma faixa de linhas para cada processo, de acordo com o numero de processos criados e o tamanho da matrix a ser calculada. Desta maneira, cada processo atua em um conjunto de linhas diferentes do outros.
 
 # 5. Paralelizar mult-matrizes-seq.c utilizando pthreads.
+
+```
+gcc -o mult-matrizes-pthreads mult-matrizes-pthreads.c -O3 -pthreads
+```
