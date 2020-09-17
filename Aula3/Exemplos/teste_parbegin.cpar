@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+task spec tar();
+task body tar()
+{
+  int i;
+  int inicio=0;
+  printf("inicio tar\n");
+  fflush(stdout);
+  parbegin
+          printf("Bloco1 THREAD %d \n",get_mi_id());
+          fflush(stdout);
+  also
+          printf("Bloco2 THREAD %d \n",get_mi_id());
+          fflush(stdout);
+  parend
+  printf("FIM DA TAREFA\n");
+  fflush(stdout);
+}
+void main()
+ {
+  create 2,tar();
+ }
+
+

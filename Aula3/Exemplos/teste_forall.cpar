@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+task spec tar();
+task body tar()
+{
+  int i;
+  int inicio = 0;
+  printf("inicio tar\n");
+  fflush(stdout);
+
+  forall i = 1 to 10000{ 
+    if (inicio == 0) {
+      printf("i inicial=%d \n",i);
+      fflush(stdout);
+      inicio = 1;
+    }   
+  }
+
+  printf("ultimo i=%d\n",i);
+  fflush(stdout);
+}
+
+void main()
+{
+  create 16,tar();
+}

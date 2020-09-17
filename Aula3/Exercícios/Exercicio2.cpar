@@ -1,0 +1,100 @@
+#include <stdio.h>
+
+shared double a[1000][1000];
+shared double b[1000][1000];
+shared double c[1000][1000];
+shared double d[1000][1000];
+shared double AB[1000][1000];
+shared double CD[1000][1000];
+shared double X[1000][1000];
+
+task spec inic_a();
+task spec inic_b();
+task spec inic_c();
+task spec inic_d();
+task spec mul_mat_ab();
+task spec mul_mat_cd();
+task spec sum_mat();
+
+task body inic_a()
+{
+    int i,j;
+    forall i=0 to 999
+        for(j=0;j<1000;j++)
+            a[i][j]=i+j;
+}
+
+task body inic_b()
+{
+    int i,j;
+    forall i=0 to 999
+        for(j=0;j<1000;j++)
+            b[i][j]=i+2*j;
+}
+
+task body inic_c()
+{
+    int i,j;
+    forall i=0 to 999
+        for(j=0;j<1000;j++)
+            c[i][j]=2*i+3*j;
+}
+
+task body inic_d()
+{
+    int i,j;
+    forall i=0 to 999
+        for(j=0;j<1000;j++)
+            d[i][j]=2*i+j;
+}
+
+task body mul_mat_ab()
+{
+    int i,j,k;
+    forall i=0 to 999
+        for(j=0;j<1000;j++)
+            for(k=0;j<1000;j++)
+                AB[i][j] = AB[i][j] + a[i][k]*b[k][j];
+}
+
+task body mul_mat_cd()
+{
+    int i,j,k;
+    forall i=0 to 999
+        for(j=0;j<1000;j++)
+            for(k=0;j<1000;j++)
+                CD[i][j] = CD[i][j] + c[i][k]*d[k][j];
+}
+
+task body mul_mat_cd()
+{
+    int i,j;
+    forall i=0 to 999
+        for(j=0;j<1000;j++)
+                X[i][j] = AB[i][j] + CD[i][j];
+}
+
+
+main()
+{
+    printf(“inicia matriz\n”):
+
+    cobegin
+        create 4,inic_a();
+        create 4,inic_b();
+        wait_all();
+        create 4,mul_mat_ab();
+ 	also
+        create 4,inic_c();
+        create 4,inic_d();
+    	wait_all();
+        create 4,mul_mat_cd();
+	coend
+
+    wait_all();
+    
+    sum_mat();
+    wait_proc(sum_mat);
+
+    printf("%lf", X[3][3]);
+}
