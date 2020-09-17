@@ -1,0 +1,43 @@
+#include <stdio.h>
+
+task spec tarefa1();
+task spec tarefa2();
+task spec tarefa3();
+
+task body tarefa1()
+{
+	int i;
+ 	for(i = 0; i < 5000; i++){
+ 		printf("%c",'a');
+  		fflush(stdout);
+ 	}
+}
+
+task body tarefa2(){
+	int i;
+ 	for(i = 0; i < 5000; i++){
+ 		printf("%c",'b');
+  		fflush(stdout);
+ 	}
+}
+
+task body tarefa3(){
+	int i;
+ 	for(i = 0; i < 5000; i++){
+ 		printf("%c",'c');
+  		fflush(stdout);
+ 	}
+}
+
+main(){
+	printf("INICIO TESTE\n");
+ 	fflush(stdout);
+ 	create 1,tarefa1();
+ 	create 1,tarefa2();
+ 	create 1,tarefa3();
+ 	wait_proc(tarefa1);
+ 	wait_proc(tarefa2);
+ 	wait_proc(tarefa3);
+ 	printf("FIM\n");
+ 	fflush(stdout);
+}

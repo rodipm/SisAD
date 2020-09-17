@@ -1,0 +1,89 @@
+#include <stdio.h>
+
+
+task spec tar1();
+task spec tar2();
+task spec tar3();
+task spec tar4();
+task spec tar5();
+task spec tar6();
+
+
+task body tar1()
+{
+    printf("tar1");
+    fflush(stdout);
+}
+
+task body tar2()
+{
+    printf("tar2");
+    fflush(stdout);
+}
+
+task body tar3()
+{
+    printf("tar3");
+    fflush(stdout);
+}
+
+task body tar4()
+{
+    printf("tar4");
+    fflush(stdout);
+}
+
+task body tar5()
+{
+    printf("tar5");
+    fflush(stdout);
+}
+
+task body tar6()
+{
+    printf("tar6");
+    fflush(stdout);
+}
+
+void seq1() {
+    printf("seq1");
+    fflush(stdout);
+}
+
+void seq2() {
+    printf("seq2");
+    fflush(stdout);
+}
+
+void seq3() {
+    printf("seq3");
+    fflush(stdout);
+}
+
+main()
+{
+    seq1();
+    cobegin
+        printf("bloco1");
+        fflush(stdout);
+        
+        create 1,tar1();
+        create 1,tar2();
+        wait_all();
+
+        seq2();
+        
+        create 1,tar5();
+        create 1,tar6();
+
+ 	also
+        printf("bloco2");
+        fflush(stdout);
+
+        create 1,tar3();
+        create 1,tar4();
+        wait_all();
+
+        seq3();
+	coend
+}

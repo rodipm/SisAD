@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+main(){
+	printf("INICIO\n");
+ 	fflush(stdout);
+ 	cobegin
+    	printf("bloco1\n");
+    	fflush(stdout);
+ 	also
+    	printf("bloco2\n");
+    	fflush(stdout);
+ 	also
+    	printf("bloco3\n");
+	coend
+}
+
+
