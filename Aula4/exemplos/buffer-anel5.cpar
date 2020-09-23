@@ -1,0 +1,80 @@
+#include <stdio.h>
+
+shared char buffer[5];
+shared int pointer;
+
+/* posicao do prox. item a ser lido e removido */
+shared int count;
+
+/* total de itens no buffer */
+shared Semaph excl;
+shared Semaph full;
+shared Semaph empty;
+
+task spec produz();
+task spec consome();
+
+void escreve(carac)
+char carac;
+{
+	lock(&empty);
+	lock(&excl);
+	
+	buffer[(pointer+count)%5] = carac;
+	count = count + 1;
+	
+	unlock(&excl);
+	unlock(&full);
+}
+
+char leia()
+{ 
+	char x;
+	
+	lock(&full);
+	lock(&excl);
+	
+	x = buffer[pointer];
+	count = count - 1;
+	pointer = (pointer+1) % 5;
+	
+	unlock(&excl);
+	unlock(&empty);
+	
+	return x;
+}
+
+task body produz()
+{
+	char k;
+	do{
+		k = getchar();
+		escreve(k);
+	} while (k!='.');
+}
+
+task body consome()
+{
+	char k;
+	while ((k=leia())!='.'){
+		putchar(k);
+	}
+}
+
+void main()
+{ 
+	create_sem(&full,0);
+	create_sem(&empty,5);
+	create_sem(&excl,1);
+	
+	pointer = 0;
+	count = 0;
+
+	create 1,produz();
+	create 1,consome();
+	wait_all();
+
+	rem_sem(&full);
+	rem_sem(&empty);
+	rem_sem(&excl);
+}

@@ -1,0 +1,54 @@
+/* teste de evento - create_ev, wait_ev, set_ev, rem_ev */ 
+#include <sys/time.h>
+#include <stdio.h>
+
+shared int A;
+shared Event ev;
+
+task spec gera();
+task body gera()
+{
+	int i;
+	printf("INICIA gera\n");	
+	fflush(stdout);
+	for(i = 0; i < 10; i++)
+		sleep(1);
+		A = 76;
+        printf("A gerado %d\n",A);
+        fflush(stdout);
+        set_ev(&ev);
+        printf("FIM gera\n");
+        fflush(stdout);  
+}
+
+task spec consome();
+task body consome()
+{
+	printf("INICIA consome\n");
+	fflush(stdout);
+	wait_ev(&ev);
+	printf("consome A %d\n",A);
+	fflush(stdout);  
+	printf("FIM consome\n");
+	fflush(stdout);  
+}
+
+void main ()
+{ 
+	printf("main\n");	
+	fflush(stdout);
+	
+	create_ev(&ev); 
+	
+	printf("evento criado\n");
+	fflush(stdout);
+	
+	create 1,gera();
+	create 1,consome();
+	wait_all();
+	
+	rem_ev(&ev);
+	
+	printf("FIM DO PROGRAMA\n");
+	fflush(stdout);
+}
