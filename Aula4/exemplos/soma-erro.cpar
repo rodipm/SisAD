@@ -1,0 +1,59 @@
+/*soma de elementos de um vetor  - solucao nao adequada - sequencializada*/
+
+#include <stdio.h>
+#include "mede_time.h"
+
+#define SIZE 2000
+
+shared int a[2000];
+shared int somaParcial[20];
+shared int soma;
+shared Semaph S;
+
+/*inicia matriz*/
+task spec init_vetor();
+task body init_vetor()
+{ 
+    int i;
+	forall i = 0 to (SIZE-1){  
+        a[i] = 1;
+    }
+}
+
+
+/*soma dos elementos*/
+task spec soma_elementos();
+task body soma_elementos()
+{
+    int i, id;
+    id = get_mi_id();
+    forall i = 0 to (SIZE-1){
+        somaParcial[id] += a[i];
+    }
+    lock(&S);
+    soma = soma + somaParcial[id];
+    unlock(&S);
+}
+ 
+main()
+{
+    int nprocs;
+    
+    printf ("Numero de processadores: ");
+    scanf("%d",&nprocs);
+    
+    // Inicializa somaParcial
+    for (int i=0; i<nprocs; i++)
+        somaParcial[i] = 0;
+
+    create_sem(&S,1);
+    
+    create nprocs, init_vetor();
+    wait_all();
+    
+    create nprocs, soma_elementos();
+    wait_all();
+    
+    rem_sem(&S);
+    printf("soma=%d \n",soma);
+}

@@ -21,7 +21,7 @@ task body inic_a()
     int i,j;
     forall i=0 to 999 {
         for(j=0;j<1000;j++) {
-            a[i][j]=i+j;
+            a[i][j]=1;
         }
     }
 }
@@ -31,7 +31,7 @@ task body inic_b()
     int i,j;
     forall i=0 to 999 {
         for(j=0;j<1000;j++) {
-            b[i][j]=i+2*j;
+            b[i][j]=1;
         }
     }
 }
@@ -41,7 +41,7 @@ task body inic_c()
     int i,j;
     forall i=0 to 999 {
         for(j=0;j<1000;j++) {
-            c[i][j]=2*i+3*j;
+            c[i][j]=2;
         }
     }
 }
@@ -51,7 +51,7 @@ task body inic_d()
     int i,j;
     forall i=0 to 999 {
         for(j=0;j<1000;j++) {
-            d[i][j]=2*i+j;
+            d[i][j]=2;
         }
     }
 }

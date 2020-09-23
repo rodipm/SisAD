@@ -1,0 +1,57 @@
+#include <sys/time.h>
+#include <stdio.h>
+
+shared int contador;
+shared Semaph sem;
+
+task spec conta1();
+task body conta1()
+{
+	int i;
+	printf("INICIA conta1\n");
+	fflush(stdout);
+
+	for(i = 0; i < 10000; i++){
+    	lock(&sem);
+    	contador++;
+    	unlock(&sem);
+	}
+
+	printf("FIM conta1\n");
+	fflush(stdout);  
+}
+
+task spec conta2();
+task body conta2()
+{
+	int i;
+	printf("INICIA conta2\n");
+	fflush(stdout);
+
+	for(i = 0; i < 10000; i++){
+		lock(&sem);
+		contador++;
+		unlock(&sem);
+	}
+
+	printf("FIM conta1\n");
+	fflush(stdout);  
+}
+
+void main()
+{ 
+	int nprocessos;
+	printf("main\n");
+	fflush(stdout);
+
+	create_sem(&sem, 1); 
+	create 1,conta1();
+	create 1,conta2();
+	wait_all();
+	rem_sem(&sem);
+
+	printf("CONTADOR=%d\n",contador);
+	fflush(stdout);
+	printf("FIM main\n"); 
+	fflush(stdout);
+}

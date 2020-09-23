@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+shared int buffer[5];
+shared int pointer;
+shared int FIM;
+
+/* posicao do prox. item a ser lido e removido */
+shared int count;
+
+/* total de itens no buffer */
+shared Semaph excl;
+shared Semaph full;
+shared Semaph empty;
+
+task spec produz1();
+task spec produz2();
+task spec consome1();
+task spec consome2();
+
+void escreve(numero)
+int numero;
+{
+  lock(&empty);
+  lock(&excl);
+  
+  buffer[(pointer+count)%5] = numero;
+  count = count + 1;
+  
+  printf("ESCREVE numero=%d (pointer+count)%5=%d\n",numero,(pointer+count)%5);
+  
+  unlock(&excl);
+  unlock(&full);
+}
+
+char leia()
+{ 
+  int x;
+  
+  lock(&full);
+  lock(&excl);
+  
+  x = buffer[pointer];
+  count = count - 1;
+  pointer = (pointer+1) % 5;
+
+  printf("LEIA x=%d pointer=%d\n",x,pointer);
+  
+  unlock(&excl);
+  unlock(&empty);
+  
+  return x;
+}
+
+task body produz1()
+{
+  int k;
+  int i;
+  i = 0;
+
+  while (i<18) {
+    k = i + 100;
+    escreve(k);
+    i++;  
+  } 
+
+  k = 998;
+  escreve(k);
+}
+
+task body produz2()
+{
+  int k;
+  int i;
+  i = 0;
+
+  while (i<12){
+    k = i;
+    escreve(k);
+    i++;
+  } 
+
+  k = 999;
+  escreve(k);
+
+}
+
+task body consome1()
+{
+  int k;
+  int contador = 0;
+  
+  while (contador<20){
+    k = leia();
+    contador++;
+    printf("CONSOME 1  %d contador=%d\n",k,contador);
+    fflush(stdout);
+    usleep(20);
+  }
+}
+
+task body consome2()
+{
+  int k;
+  int contador=0; 
+  while (contador<10){
+    k = leia();
+    contador++;
+    printf("CONSOME 2  %d contador=%d\n",k,contador);
+    fflush(stdout);
+    usleep(40);
+  }
+}
+
+void main()
+{ 
+  FIM = 0;
+  
+  create_sem(&full,0);
+  create_sem(&empty,5);
+  create_sem(&excl,1);
+  
+  pointer = 0;
+  count = 0;
+  
+  create 1,produz1();
+  create 1,produz2();
+  create 1,consome1();
+  create 1,consome2();
+  wait_all();
+  
+  rem_sem(&full);
+  rem_sem(&empty);
+  rem_sem(&excl);
+}
