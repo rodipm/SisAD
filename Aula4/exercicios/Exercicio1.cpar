@@ -1,0 +1,71 @@
+/*soma de elementos de um vetor  - solucao nao adequada - sequencializada*/
+
+#include <stdio.h>
+#include "mede_time.h"
+
+#define SIZE 2000
+
+shared int a[SIZE];
+shared int soma;
+shared int nprocs;
+shared Semaph S;
+
+
+/*inicia matriz*/
+task spec init_vetor();
+task body init_vetor()
+{ 
+    int i;
+	forall i = 0 to (SIZE-1){  
+        a[i] = 1;
+    }
+}
+
+
+/*soma dos elementos*/
+task spec soma_elementos();
+task body soma_elementos()
+{
+    int i, n_iter;
+
+    forall i = 0 to (nprocs-1) {
+        int id, inicio, fim, soma_parcial, n_iter;
+
+        id = get_mi_id();
+        n_iter = SIZE / nprocs;
+        inicio = id * n_iter;
+        fim = inicio + n_iter;
+        soma_parcial = 0;
+
+        if (fim > SIZE || i == nprocs-1)
+            fim = SIZE;
+
+        printf("%d, %d, %d, %d, %d\n", id, n_iter, inicio, fim, soma_parcial);
+        for (int j = inicio; j < fim; j++) {
+            soma_parcial += a[j];
+        }
+        printf("%d, %d, %d, %d, %d\n", id, n_iter, inicio, fim, soma_parcial);
+
+        lock(&S);
+        soma += soma_parcial;
+        unlock(&S);
+    }
+}
+
+main()
+{
+    printf ("Numero de processadores: ");
+    scanf("%d",&nprocs);
+    
+    soma = 0;
+    create_sem(&S,1);
+
+    create nprocs, init_vetor();
+    wait_all();
+    
+    create nprocs, soma_elementos();
+    wait_all();
+
+    rem_sem(&S);
+    printf("soma=%d \n",soma);
+}

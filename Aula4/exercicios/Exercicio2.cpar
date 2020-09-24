@@ -1,0 +1,87 @@
+#include <stdio.h>
+
+#define SIZE 2000
+
+shared int A[SIZE];
+shared int B[SIZE];
+shared int C[SIZE];
+shared int X[SIZE];
+shared int Y[SIZE];
+
+shared Semaph full2;
+shared Semaph full3;
+shared Semaph empty2;
+shared Semaph empty3;
+
+task spec tar1();
+task spec tar2();
+task spec tar3();
+
+task body tar1()
+{
+    int i;
+    forall i=0 to SIZE-2 {
+        lock(&empty2);
+        lock(&empty3);
+        A[i] = X[i]*3;
+        unlock(&full2);
+        unlock(&full3);
+    }
+}
+
+task body tar2()
+{
+    int i;
+    B[0] = 1;
+    forall i=1 to SIZE-1 {
+        lock(&full2);
+        B[i] = Y[i] + A[i-1];
+        unlock(&empty2);
+    }
+}
+
+task body tar3()
+{
+    int i;
+    C[0] = 1;
+    forall i=1 to SIZE-1 {
+        lock(&full3);
+        C[i] = A[i-1] * 2;
+        unlock(&empty3);
+    }
+}
+
+main()
+{
+    printf("iniciliza vetores sequencialmente\n");
+    for (int i = 0; i < SIZE; i++) {
+        X[i] = i;
+        Y[i] = i+1;
+    }
+
+
+    create_sem(&full2, 0);
+    create_sem(&full3, 0);
+    create_sem(&empty2, 1);
+    create_sem(&empty3, 1);
+
+    create 1, tar1();
+    create 1, tar2();
+    create 1, tar3();
+    wait_all();
+
+    rem_sem(&full2);
+    rem_sem(&full3);
+    rem_sem(&empty2);
+    rem_sem(&empty3);
+
+    printf("B[%d] = %d ", 0, B[0]);
+    printf("B[%d] = %d ", 1, B[1]);
+    printf("B[%d] = %d ", 500, B[500]);
+    printf("B[%d] = %d\n", 1999, B[1999]);
+    printf("C[%d] = %d ", 0, C[0]);
+    printf("C[%d] = %d ", 1, C[1]);
+    printf("C[%d] = %d ", 500, C[500]);
+    printf("C[%d] = %d\n", 1999, C[1999]);
+
+}
