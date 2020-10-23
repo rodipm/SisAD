@@ -17,3 +17,5 @@
 # [Aula 7](Aula7) - Seções Paralelas e Semáforos (OpenMP)
 
 # [Aula 8](Aula8) - Barrier e Tasks (OpenMP)
+
+# [Projeto](projeto) - Desenvolvimento do Projeto Final da Disciplina

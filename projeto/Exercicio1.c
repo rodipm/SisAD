@@ -13,6 +13,8 @@
 
 int main(int argc, char *argv[])
 {
+    TIMER_CLEAR;
+    TIMER_START;
     char buff[SIZE];
     char sequencia[SIZE];
     char arq1[NOME_ARQ_SIZE];
@@ -25,7 +27,6 @@ int main(int argc, char *argv[])
     int arq2_size;
     int i_seq_busca;
 
-    TIMER_CLEAR;
 
     // Abrir o arquivo e pegar a palavra
     if (argc == 3)
@@ -62,7 +63,6 @@ int main(int argc, char *argv[])
     // Leitura do arquivo 1 linha por linha e busca pela sequencia lida
     // Leitura do arquivo 2 linha por linha ao buscar a sequencia lida do arquivo 1
 
-    TIMER_START;
     printf("INICIO\n");
 
     fseek(f2, 0L, SEEK_END);
