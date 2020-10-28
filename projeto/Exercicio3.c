@@ -10,21 +10,23 @@
 #include <omp.h>
 
 #define N_SEQ_ARQ1 6
-#define N_SEQ_ARQ2_MAX 20000000
 #define SIZE 100
 #define NOME_ARQ_SIZE 50
 #define TRUE 1
 #define FALSE 0
+// #define CHUNK 200
+#define CHUNK 10
 
 char sequencias1[N_SEQ_ARQ1][SIZE];
-char sequencias2[N_SEQ_ARQ2_MAX][SIZE];
-int linhas_f1, linhas_f2;
+char sequencias2[CHUNK][SIZE];
+int linhas_f1;
 char arq1[NOME_ARQ_SIZE];
 char arq2[NOME_ARQ_SIZE];
 int ocorrencias[N_SEQ_ARQ1];
 int min_len = 2147483647;
 int max_len = -1;
 char nova_seq[SIZE];
+
 void carrega_sequencias_1()
 {
     FILE *f1;
@@ -39,7 +41,6 @@ void carrega_sequencias_1()
 
     // Numero de linhas
     linhas_f1 = -1;
-    linhas_f2 = 0;
 
     // Populando o array de sequencias1
     while (!feof(f1))
@@ -58,7 +59,7 @@ void carrega_sequencias_1()
 
 int main(int argc, char *argv[])
 {
-    omp_set_num_threads(8);
+    omp_set_num_threads(5);
 
     if (argc == 3)
     {
@@ -85,57 +86,62 @@ int main(int argc, char *argv[])
     TIMER_CLEAR;
     TIMER_START;
     carrega_sequencias_1();
-
     printf("INICIO\n");
-    for (int i_seq = 0; i_seq < linhas_f1; i_seq++)
+    int num_seqs = 0;
+    int END = 0;
+#pragma omp parallel firstprivate(num_seqs)
+#pragma omp single
+    while (1)
     {
-        int achou = FALSE;
-        int i_seq_busca = 0;
-        while (1)
+        END = !fgets(nova_seq, SIZE, f2);
+        if (!END)
         {
-            if (i_seq == 0)
+            int _len = strlen(nova_seq);
+            if (_len > max_len || _len < min_len)
+                continue;
+            strcpy(sequencias2[num_seqs++], nova_seq);
+        }
+        if (END || num_seqs == CHUNK)
+        {
+#pragma omp task firstprivate(sequencias2, num_seqs) shared(ocorrencias)
             {
-                char nova_seq[SIZE];
-                int _len;
-                if (feof(f2))
+                printf("Task - THREAD=%d\n", omp_get_thread_num());
+                for (int i_seq = 0; i_seq < linhas_f1; i_seq++)
                 {
-                    printf("Numero de Linhas = %d\n", linhas_f2);
-                    break;
-                }
-                fgets(nova_seq, SIZE, f2);
-                _len = strlen(nova_seq);
-                if (_len > max_len || _len < min_len) continue;
-                strcpy(sequencias2[++linhas_f2], nova_seq);
-            }
-            else
-            {
-                if (i_seq_busca == linhas_f2)
-                    break;
-            }
-
-            char *seq1 = sequencias1[i_seq];
-            char *seq2 = sequencias2[i_seq_busca];
-            if (strlen(seq1) == strlen(seq2))
-            {
-                achou = TRUE;
-
-                for (int j = 0; j < strlen(seq1); j++)
-                {
-
-                    if (seq1[j] != seq2[j])
+                    char *seq1 = sequencias1[i_seq];
+                    int _len1 = strlen(seq1);
+                    for (int i_seq_busca = 0; i_seq_busca < num_seqs; i_seq_busca++)
                     {
-                        achou = FALSE;
-                        break;
+                        int achou = FALSE;
+                        char *seq2 = sequencias2[i_seq_busca];
+                        int _len2 = strlen(seq2);
+                        if (_len1 == _len2)
+                        {
+                            achou = TRUE;
+
+                            for (int j = 0; j < _len1; j++)
+                            {
+
+                                if (seq1[j] != seq2[j])
+                                {
+                                    achou = FALSE;
+                                    break;
+                                }
+                            }
+
+                            if (achou == TRUE)
+                            {
+#pragma omp critical
+                                ocorrencias[i_seq]++;
+                            }
+                        }
                     }
                 }
-
-                if (achou == TRUE)
-                {
-                    #pragma omp critical
-                    ocorrencias[i_seq]++;
-                }
             }
-            i_seq_busca++;
+#pragma omp critical
+            num_seqs = 0;
+            if (END)
+                break;
         }
     }
 

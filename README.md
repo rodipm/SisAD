@@ -18,4 +18,6 @@
 
 # [Aula 8](Aula8) - Barrier e Tasks (OpenMP)
 
+# [Aula 9](Aula9) - Sistemas Distribuidos (Open - MPI)
+
 # [Projeto](projeto) - Desenvolvimento do Projeto Final da Disciplina

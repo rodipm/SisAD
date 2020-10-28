@@ -10,6 +10,7 @@
 #define NOME_ARQ_SIZE 50
 #define TRUE 1
 #define FALSE 0
+#define _FILE_OFFSET_BITS 64.
 
 int main(int argc, char *argv[])
 {
@@ -24,8 +25,8 @@ int main(int argc, char *argv[])
     int achou;
     FILE *f1;
     FILE *f2;
-    int arq2_size;
-    int i_seq_busca;
+    long int arq2_size;
+    long int i_seq_busca;
 
 
     // Abrir o arquivo e pegar a palavra
@@ -66,8 +67,9 @@ int main(int argc, char *argv[])
     printf("INICIO\n");
 
     fseek(f2, 0L, SEEK_END);
-    arq2_size = ftell(f2);
+    arq2_size = ftello(f2);
     fclose(f2);
+    printf("arq2_size=%ld\n", arq2_size);
 
     #pragma omp parallel num_threads(8) firstprivate(arq2)
     {
