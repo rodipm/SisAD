@@ -1,4 +1,4 @@
-# Sistemas de Alto Desempenho
+# Sistemas de Alto Desempenho - PCS3568
 
 ## Aulas e Exercícios
 
@@ -19,5 +19,7 @@
 # [Aula 8](Aula8) - Barrier e Tasks (OpenMP)
 
 # [Aula 9](Aula9) - Sistemas Distribuidos (Open - MPI)
+
+# [Aula 10](Aula10) - Sistemas Distribuidos - Balanceamento de carga heterogenea e pipeline (Open - MPI)
 
 # [Projeto](projeto) - Desenvolvimento do Projeto Final da Disciplina
