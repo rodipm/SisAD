@@ -1,0 +1,1 @@
+echo "Tempo: $1"
