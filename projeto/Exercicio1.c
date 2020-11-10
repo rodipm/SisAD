@@ -1,3 +1,7 @@
+/*
+    Paralelização do programa busca-sequencias.c ou Exercicio0.c
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,14 +31,19 @@ int main(int argc, char *argv[])
     FILE *f2;
     long int arq2_size;
     long int i_seq_busca;
-
+    int n_threads = 8;
 
     // Abrir o arquivo e pegar a palavra
-    if (argc == 3)
+    if (argc >= 3)
     {
         f1 = fopen(argv[1], "r");
         f2 = fopen(argv[2], "r");
         strcpy(arq2, argv[2]);
+    }
+
+    if (argc == 4)
+    {
+        n_threads = strtol(argv[3], NULL, 10);
     }
 
     else
@@ -66,15 +75,17 @@ int main(int argc, char *argv[])
 
     printf("INICIO\n");
 
+    omp_set_num_threads(n_threads);
+
     fseek(f2, 0L, SEEK_END);
     arq2_size = ftello(f2);
     fclose(f2);
-    printf("arq2_size=%ld\n", arq2_size);
 
-    #pragma omp parallel num_threads(8) firstprivate(arq2)
+    #pragma omp parallel firstprivate(arq2)
     {
         #pragma omp single
         {
+            printf("Usando %d threads\n", omp_get_num_threads());
             i_seq = 0;
             fgets(sequencia, SIZE, f1);
 

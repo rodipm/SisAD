@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     TIMER_CLEAR;
 
     // Abrir o arquivo e pegar a palavra
-    if (argc == 3){
+    if (argc >= 3){
     	f1 = fopen(argv[1], "r");
     	f2 = fopen(argv[2], "r");
     }

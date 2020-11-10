@@ -1,5 +1,6 @@
 import re
 import pprint
+import json
 
 exercicios = {
     "0": {
@@ -43,7 +44,7 @@ with open("out.txt") as f:
             break
 
         # Exercíco: $e, Threads: $t, Arquivo2: $s
-        m = re.search(r'Exercíco: (\d), Threads: (\d), Arquivo2: (\d)', header)
+        m = re.search(r'Exercíco: (\d+), Threads: (\d+), Arquivo2: (\d+)', header)
         _ex = m.group(1)
         _threads = m.group(2)
         _size = m.group(3)
@@ -58,4 +59,5 @@ for e in range(0, 4):
         for s in [0,1000,100000,200000]:
             exercicios[str(e)][str(t)][str(s)] = avr_var_method(exercicios[str(e)][str(t)][str(s)])
 
-pprint.pprint(exercicios)
+with open('tempos.txt', 'w') as file:
+    json.dump(exercicios, file)

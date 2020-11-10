@@ -1,5 +1,5 @@
 /*
-    Paralelização do modelo sequencial do Exercicio2
+    Nova proposta de algoritmo sequencial
 */
 
 #include <stdio.h>
@@ -59,9 +59,8 @@ void carrega_sequencias_1()
 
 int main(int argc, char *argv[])
 {
-    omp_set_num_threads(8);
 
-    if (argc == 3)
+    if (argc >= 3)
     {
         strcpy(arq1, argv[1]);
         strcpy(arq2, argv[2]);
