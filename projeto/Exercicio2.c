@@ -90,13 +90,14 @@ int main(int argc, char *argv[])
     int END = 0;
     while (1)
     {
-        fgets(nova_seq, SIZE, f2);
-        int _len = strlen(nova_seq);
-        if (_len > max_len || _len < min_len)
-            continue;
-        strcpy(sequencias2[num_seqs++], nova_seq);
-        END = feof(f2);
-
+        // fgets(nova_seq, SIZE, f2);
+        END = !fgets(nova_seq, SIZE, f2);
+        if (!END) {
+            int _len = strlen(nova_seq);
+            if (_len > max_len || _len < min_len)
+                continue;
+            strcpy(sequencias2[num_seqs++], nova_seq);
+        }
         if (END == 1 || num_seqs == CHUNK)
         {
             {

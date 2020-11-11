@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         n_threads = strtol(argv[3], NULL, 10);
     }
 
-    else
+    else if (argc < 3)
     {
         printf("Digite o nome do arquivo 1 (seqs a serem buscadas): ");
         scanf("%s", &arq1);
