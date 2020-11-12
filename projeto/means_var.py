@@ -50,7 +50,7 @@ with open("out.txt") as f:
         _size = m.group(3)
         print(f"Exercíco: {_ex}, Threads: {_threads}, Arquivo2: {_size}")
         
-        for i in range(10):
+        for i in range(4):
             t = float(f.readline())
             exercicios[_ex][_threads][_size].append(t)
     

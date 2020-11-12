@@ -82,7 +82,7 @@ def plot_variacao_threads():
 
 def plot_comparacao_exercicios():
     labels = ['Exercicio0', 'Exercicio1', 'Exercicio2', 'Exercicio3']
-    medias = [resultados["0"]["1"]["200000"][0], resultados["1"]["4"]["200000"][0], resultados["2"]["1"]["200000"][0], resultados["3"]["4"]["200000"][0]]
+    medias = [resultados["0"]["1"]["200000"][0], resultados["1"]["4"]["200000"][0], resultados["2"]["1"]["200000"][0], resultados["3"]["8"]["200000"][0]]
     variancias = [resultados["0"]["1"]["200000"][1], resultados["1"]["8"]["200000"][1], resultados["2"]["1"]["200000"][1], resultados["3"]["8"]["200000"][1]]
 
     x = np.arange(len(labels))  # the label locations

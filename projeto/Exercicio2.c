@@ -7,25 +7,18 @@
 #include <string.h>
 #include <sys/time.h>
 #include "mede_time.h"
-#include <omp.h>
 
 #define N_SEQ_ARQ1 6
-#define N_SEQ_ARQ2_MAX 20000000
-#define SIZE 100
 #define NOME_ARQ_SIZE 50
+#define SIZE 100
 #define TRUE 1
 #define FALSE 0
-#define CHUNK 100
 
 char sequencias1[N_SEQ_ARQ1][SIZE];
-char sequencias2[CHUNK][SIZE];
-int linhas_f1;
+char *sequencias2;
 char arq1[NOME_ARQ_SIZE];
 char arq2[NOME_ARQ_SIZE];
 int ocorrencias[N_SEQ_ARQ1];
-int min_len = 2147483647;
-int max_len = -1;
-char nova_seq[SIZE];
 
 void carrega_sequencias_1()
 {
@@ -39,22 +32,35 @@ void carrega_sequencias_1()
         exit(1);
     }
 
-    // Numero de linhas
-    linhas_f1 = -1;
-
     // Populando o array de sequencias1
-    while (!feof(f1))
+    for (int i = 0; i < N_SEQ_ARQ1; i++)
     {
-        fgets(sequencias1[++linhas_f1], SIZE, f1);
-        ocorrencias[linhas_f1] = 0;
-        int _len = strlen(sequencias1[linhas_f1]);
-        if (_len > max_len)
-            max_len = _len;
-        else if (_len < min_len)
-            min_len = _len;
+        fgets(sequencias1[i], SIZE, f1);
+        ocorrencias[i] = 0;
     }
 
     fclose(f1);
+}
+
+void carrega_sequencias_2()
+{
+    FILE *f2;
+    f2 = fopen(arq2, "r");
+
+    // Verificacao do nome do arquivo
+    if (f2 == NULL)
+    {
+        printf("Arquivo 2 nao encontrado\n");
+        exit(1);
+    }
+
+    fseek(f2, 0, SEEK_END);
+    int length = ftell(f2);
+    fseek(f2, 0, SEEK_SET);
+    sequencias2 = malloc(length);
+
+    fread(sequencias2, 1, length, f2);
+    fclose(f2);
 }
 
 int main(int argc, char *argv[])
@@ -73,78 +79,44 @@ int main(int argc, char *argv[])
         scanf("%s", &arq2);
     }
 
-    FILE *f2;
-    f2 = fopen(arq2, "r");
-
-    if (f2 == NULL)
-    {
-        printf("Arquivo 2 nao encontrado\n");
-        exit(1);
-    }
-
     TIMER_CLEAR;
     TIMER_START;
+    printf("INICIO_TESTE\n");
     carrega_sequencias_1();
-    printf("INICIO\n");
-    int num_seqs = 0;
-    int END = 0;
+    carrega_sequencias_2();
+
+    int END = FALSE;
+
+    char *seq_index = sequencias2;
+
+    // Percorre toda a variável de sequencias 2
     while (1)
     {
-        // fgets(nova_seq, SIZE, f2);
-        END = !fgets(nova_seq, SIZE, f2);
-        if (!END) {
-            int _len = strlen(nova_seq);
-            if (_len > max_len || _len < min_len)
-                continue;
-            strcpy(sequencias2[num_seqs++], nova_seq);
-        }
-        if (END == 1 || num_seqs == CHUNK)
+        char *new_line_index = strchr(seq_index, '\n');
+
+        if (!new_line_index)
+            break;
+
+        for (int i_seq = 0; i_seq < N_SEQ_ARQ1; i_seq++)
         {
+            if (new_line_index - seq_index != strlen(sequencias1[i_seq]) - 1)
+                continue;
+
+            if (!strncmp(sequencias1[i_seq], seq_index, new_line_index - seq_index))
             {
-                for (int i_seq = 0; i_seq < linhas_f1; i_seq++)
-                {
-                    char *seq1 = sequencias1[i_seq];
-                    int _len1 = strlen(seq1);
-                    for (int i_seq_busca = 0; i_seq_busca < num_seqs; i_seq_busca++)
-                    {
-                        int achou = FALSE;
-                        char *seq2 = sequencias2[i_seq_busca];
-                        int _len2 = strlen(seq2);
-                        if (_len1 == _len2)
-                        {
-                            achou = TRUE;
-
-                            for (int j = 0; j < _len1; j++)
-                            {
-
-                                if (seq1[j] != seq2[j])
-                                {
-                                    achou = FALSE;
-                                    break;
-                                }
-                            }
-
-                            if (achou == TRUE)
-                            {
-                                ocorrencias[i_seq]++;
-                            }
-                        }
-                    }
-                }
+                ocorrencias[i_seq]++;
             }
-            if (END)
-                break;
-            num_seqs = 0;
         }
+        seq_index = new_line_index+1;
     }
+
+    TIMER_STOP;
 
     printf("=======================================\n");
     for (int i = 0; i < N_SEQ_ARQ1; i++)
         printf("Total de ocorrencias[%d] = %d\n", i, ocorrencias[i]);
     printf("=======================================\n");
 
-    TIMER_STOP;
     printf("Tempo: %f \n", TIMER_ELAPSED);
-    fclose(f2);
     return 0;
 }
