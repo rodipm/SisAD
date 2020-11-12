@@ -18,8 +18,10 @@
 
 # [Aula 8](Aula8) - Barrier e Tasks (OpenMP)
 
-# [Aula 9](Aula9) - Sistemas Distribuidos (Open - MPI)
+# [Aula 9](Aula9) - Sistemas Distribuidos (MPI)
 
-# [Aula 10](Aula10) - Sistemas Distribuidos - Balanceamento de carga heterogenea e pipeline (Open - MPI)
+# [Aula 10](Aula10) - Sistemas Distribuidos - Balanceamento de carga heterogenea e pipeline (MPI)
+
+# [Aula 11](Aula11) - Sistemas Distribuidos - Comunicação Bloqueante e Não Bloqueante (MPI)
 
 # [Projeto](projeto) - Desenvolvimento do Projeto Final da Disciplina
